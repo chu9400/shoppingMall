@@ -76,3 +76,14 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+
+/* 상세 페이지 */
+.detail {
+  text-align : center;
+}
+.detail img{
+  max-width : 30%;
+  display : block;
+  margin : auto;
+}

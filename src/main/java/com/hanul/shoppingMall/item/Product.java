@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-public class Item {
+public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -16,7 +16,7 @@ public class Item {
     private String title;
     private Integer price;
 
-    public Item(String title, Integer price) {
+    public Product(String title, Integer price) {
         this.title = title;
         this.price = price;
     }
