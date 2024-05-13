@@ -10,11 +10,16 @@
     <div th:replace="~{nav.html :: navbar}"></div>
     <div class="container">
         <h4>상품 추가 페이지</h4>
-        <form action="/items" method="POST">
+
+        <form action="/products" method="POST">
             <input type="text" name="title" placeholder="상품명" required>
-            <input type="number" name="price" placeholder="가격" required>
+            <input type="text" name="price" placeholder="가격" required>
             <button type="submit">상품 추가</button>
         </form>
+
+        <div th:if="${errors}">
+            <p>상품과 가격을 다시 적어주세요</p>
+        </div>
     </div>
 </body>
 </html>

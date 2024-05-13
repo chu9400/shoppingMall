@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>에러 페이지</title>
+</head>
+<body>
+    <h4>에러 페이지</h4>
+
+    <p th:text="'상태 : ' + ${status}"></p>
+    <hr />
+    <p th:text="'에러코드 : ' + ${error}"></p>
+    <hr />
+    <p th:text="'경로 : ' + ${path}"></p>
+    <hr />
+    <p th:text="'메시지 : ' + ${message}"></p>
+    <hr />
+    <p th:text="'exception : ' + ${exception}"></p>
+
+</body>
+</html>

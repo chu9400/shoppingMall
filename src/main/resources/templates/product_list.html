@@ -13,7 +13,7 @@
         <img src="https://placehold.co/300">
         <div>
             <h4><a th:href="@{'/products/' + ${product.id}}" th:text="${product.title}">상품명</a></h4>
-            <p th:text="${product.price}">가격</p>
+            <p th:text="${product.price} + '원'">가격</p>
         </div>
         <hr />
         <br />
