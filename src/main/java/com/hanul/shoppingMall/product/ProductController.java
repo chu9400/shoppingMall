@@ -34,7 +34,7 @@ public class ProductController {
 
     @PostMapping("/products")
     public String addProduct(
-            @Validated @ModelAttribute ProductDTO productDTO,
+            @Validated ProductDTO productDTO,
             BindingResult result,
             Model model
         )
