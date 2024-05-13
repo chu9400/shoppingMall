@@ -54,10 +54,4 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/test")
-    String test() {
-        return "redirect:/products";
-    }
-
-
 }
