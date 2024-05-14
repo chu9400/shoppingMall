@@ -8,21 +8,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
 
-    private final ProductRepository productRepository;
     private final ProductService productService;
 
     @GetMapping("/")
-    public String landing() {
+    public String showlanding() {
         return "index";
     }
 
     @GetMapping("/products")
-    public String productList(Model model) {
+    public String showProductList(Model model) {
         productService.findAllProduct(model);
         return "product_list";
     }
@@ -32,33 +33,49 @@ public class ProductController {
         return "product_add";
     }
 
+    @GetMapping("/products/{productId}")
+    public String showProductDetailForm(@PathVariable Long productId, Model model) {
+        return productService.renderProductForm(productId, model, "product_detail");
+    }
+
+    @GetMapping("/products/edit/{productId}")
+    public String showProductEditForm(@PathVariable Long productId, Model model) {
+        return productService.renderProductForm(productId, model, "product_detail_edit");
+    }
+
+    // 상품 등록
     @PostMapping("/products")
     public String addProduct(
             @Validated ProductDTO productDTO,
-            BindingResult result,
-            Model model
-        )
-    {
-        boolean checkForm = productService.checkAddProductForm(result, productDTO);
-
-        if (checkForm) {
-            productService.saveProduct(productDTO);
-            return "redirect:/products";
-        }  else {
-            productService.errorAddProductForm(result, model);
+            BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            log.info("productDTO Error = {}", result.getAllErrors());
             return "product_add";
         }
+        productService.saveProduct(productDTO);
+        return "redirect:/products";
     }
 
+    // 상품 수정
+    @PostMapping("/products/edit/{productId}")
+    public String editProduct(
+            @PathVariable Long productId,
+            @Validated ProductDTO productDTO,
+            BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            log.info("productDTO Error = {}", result.getAllErrors());
+            return "redirect:/products/edit/" + productId + "?error=true";
+        }
 
-    @GetMapping("/products/{productId}")
-    String productDetail(@PathVariable Long productId, Model model) {
-        boolean result_product = productService.findProduct(productId, model);
-
-        if (result_product) {
-            return "product_detail";
-        } else {
+        Optional<Product> optionalProduct = productService.findProduct(productId);
+        if (optionalProduct.isPresent()) {
+            Product findProduct = optionalProduct.get();
+            productService.editProduct(findProduct, productDTO);
             return "redirect:/products";
+        } else {
+            return "redirect:/products/edit/" + productId;
         }
     }
 

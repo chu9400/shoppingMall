@@ -1,3 +1,4 @@
+/*
 package com.hanul.shoppingMall;
 
 import org.springframework.http.ResponseEntity;
@@ -10,10 +11,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 public class MyExceptionHandler {
 
-/*    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+   @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> urlError() {
         return ResponseEntity.status(400).body("URL 주소 에러");
-    }*/
+    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> inputError(MethodArgumentTypeMismatchException ex) {
@@ -25,6 +26,4 @@ public class MyExceptionHandler {
     public ResponseEntity<String> urlError() {
         return ResponseEntity.status(400).body("URL 주소 에러");
     }
-
-
-}
+}*/

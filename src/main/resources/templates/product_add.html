@@ -17,9 +17,10 @@
             <button type="submit">상품 추가</button>
         </form>
 
-        <div th:if="${errors}">
+        <div th:if="${param.error}">
             <p>상품과 가격을 다시 적어주세요</p>
         </div>
+
     </div>
 </body>
 </html>

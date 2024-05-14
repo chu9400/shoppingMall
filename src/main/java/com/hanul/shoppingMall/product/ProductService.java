@@ -4,10 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,37 +20,28 @@ public class ProductService {
         model.addAttribute("productList", productList);
     }
 
-    // 상품 입력값 유효성 검사
-    public boolean checkAddProductForm(BindingResult result, ProductDTO productDTO) {
-        if (result.hasErrors()) {
-            log.error("productDTO = {}", productDTO);
-            log.error("productDTO Error = {}", result.getAllErrors());
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    // 상품 입력값 유효성 실패시 실행
-    public void errorAddProductForm(BindingResult result, Model model) {
-        List<ObjectError> errors = result.getAllErrors();
-        model.addAttribute("errors", errors);
-    }
-
-    // 상품 입력값 유효성 성공시 실행
-    public void saveProduct(ProductDTO productDTO) {
+    public Product saveProduct(ProductDTO productDTO) {
         Product product = new Product(productDTO.getTitle(), productDTO.getPrice());
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
-    public boolean findProduct(@PathVariable Long productId, Model model) {
-        Optional<Product> result = productRepository.findById(productId);
-        if (result.isPresent()){
-            Product findProduct = result.get();
-            model.addAttribute("findProduct", findProduct);
-            return true;
+    public Product editProduct(Product product, ProductDTO productDTO) {
+        product.setTitle(productDTO.getTitle());
+        product.setPrice(productDTO.getPrice());
+        return productRepository.save(product);
+    }
+
+    public Optional<Product> findProduct(Long productId) {
+        return productRepository.findById(productId);
+    }
+
+    public String renderProductForm(Long productId, Model model, String viewName) {
+        Optional<Product> productOptional = findProduct(productId);
+        if (productOptional.isPresent()) {
+            model.addAttribute("findProduct", productOptional.get());
+            return viewName;
         } else {
-            return false;
+            return "redirect:/products";
         }
     }
 
