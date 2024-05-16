@@ -2,12 +2,14 @@ package com.hanul.shoppingMall.product;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
 
     @GetMapping("/")
     public String showlanding() {
@@ -41,6 +44,12 @@ public class ProductController {
     @GetMapping("/products/edit/{productId}")
     public String showProductEditForm(@PathVariable Long productId, Model model) {
         return productService.renderProductForm(productId, model, "product_detail_edit");
+    }
+
+    // 상품 삭제
+    @DeleteMapping("/products/delete/{productId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
+        return productService.deleteProductStringResponse(productId);
     }
 
     // 상품 등록
