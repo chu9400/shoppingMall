@@ -18,10 +18,8 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String registerMember(
-            @Validated MemberDTO memberDTO
-    ) {
-        memberService.registerMember(memberDTO);
+    public String registerMember (@Validated MemberDTO memberDTO) {
+        memberService.saveMember(memberDTO);
         return "redirect:/products";
     }
 }
