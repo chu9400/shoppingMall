@@ -3,6 +3,7 @@ package com.hanul.shoppingMall.product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,13 +58,15 @@ public class ProductController {
     @PostMapping("/products")
     public String addProduct(
             @Validated ProductDTO productDTO,
-            BindingResult result
+            BindingResult result,
+            Authentication auth
     ) {
         if (result.hasErrors()) {
             log.info("productDTO Error = {}", result.getAllErrors());
             return "product_add";
         }
-        productService.saveProduct(productDTO);
+        System.out.println("auth = " + auth.getName());
+        productService.saveProduct(productDTO, auth);
         return "redirect:/products";
     }
 

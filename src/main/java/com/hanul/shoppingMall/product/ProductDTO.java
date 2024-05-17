@@ -15,4 +15,5 @@ public class ProductDTO {
     @NotNull(message = "Price cannot be null")
     @Positive(message = "Price must be positive")
     private Integer price;
+
 }

@@ -3,6 +3,7 @@ package com.hanul.shoppingMall.product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +24,8 @@ public class ProductService {
         model.addAttribute("productList", productList);
     }
 
-    public Product saveProduct(ProductDTO productDTO) {
-        Product product = new Product(productDTO.getTitle(), productDTO.getPrice());
+    public Product saveProduct(ProductDTO productDTO, Authentication auth) {
+        Product product = new Product(productDTO.getTitle(), productDTO.getPrice(), auth.getName());
         return productRepository.save(product);
     }
 

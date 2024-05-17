@@ -1,5 +1,6 @@
 package com.hanul.shoppingMall.product;
 
+import com.hanul.shoppingMall.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,12 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-    public Product(String title, Integer price) {
+    @Column(nullable = false)
+    private String username;
+
+    public Product(String title, Integer price, String username) {
         this.title = title;
         this.price = price;
+        this.username = username;
     }
 }

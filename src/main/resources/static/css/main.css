@@ -57,7 +57,7 @@ h4 {
 form {
     margin-top: 20px;
 }
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="password"] {
     width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 10px;
