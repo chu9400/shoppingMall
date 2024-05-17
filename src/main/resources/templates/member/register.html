@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>회원 가입 페이지</title>
+</head>
+<body>
+    <div th:replace="~{nav.html :: navbar}"></div>
+    <div class="container">
+        <h4>회원 가입 페이지</h4>
+
+<!--        <form th:action="@{/members}" method="post">-->
+        <form action="/member" method="POST">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="displayName">Display Name:</label>
+                <input type="text" id="displayName" name="displayName" required>
+            </div>
+            <div>
+                <button type="submit">가입하기</button>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

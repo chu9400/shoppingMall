@@ -32,9 +32,13 @@ dependencies {
 
 	// JPA : java의 ORM 표준문법 // Hibernate : JPA 쓰기좋게 구현한거
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // jpa사용, 데이터를 java로 관리
-
 	// Hibernate Validator 추가
 	implementation 'org.hibernate.validator:hibernate-validator'
+
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// 타임리프에서 spring security 사용할 수 있게 도와줌
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
 }
 
