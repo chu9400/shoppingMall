@@ -11,14 +11,21 @@
     <div class="container">
         <h4>마이 페이지</h4>
 
-        <p sec:authentication="principal.username"></p>
-        <p sec:authentication="principal.authorities"></p> <!-- [일반유저]-->
+        <div>
+            <span>나의 아이디 : </span> <span sec:authentication="principal.username"></span>
+        </div>
 
-        <p sec:authorize="hasAuthority('일반유저')">일반유저만 보여주기</p>
-        <p sec:authorize="hasAuthority('관리자')">관리자만 보여주기</p>
+        <div>
+            <span>나의 닉네임 : </span> <span sec:authentication="principal.displayName"></span>
+        </div>
 
-        <p sec:authorize="isAuthenticated()"> 로그인된 사람만 보이기 </p>
-        <p sec:authorize="isAnonymous()"> 손님만 보이기 </p>
+        <div>
+            <span>나의 권한 : </span>
+            <span sec:authorize="hasAuthority('일반유저')">일반유저</span>
+            <span sec:authorize="hasAuthority('관리자')">관리자</span>
+        </div>
+
+
 
     </div>
 </body>

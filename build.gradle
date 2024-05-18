@@ -40,6 +40,9 @@ dependencies {
 	// 타임리프에서 spring security 사용할 수 있게 도와줌
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
+	// DB에 세션 저장
+	implementation 'org.springframework.session:spring-session-jdbc'
+
 }
 
 tasks.named('test') {

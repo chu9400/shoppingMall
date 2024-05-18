@@ -37,7 +37,6 @@ public class MemberController {
         // 임시 코드
         System.out.println(auth.getName()); //아이디출력가능
         System.out.println(auth.isAuthenticated()); //로그인여부 검사가능
-        System.out.println(auth.getAuthorities().contains(new SimpleGrantedAuthority("일반유저")));
         return "member/mypage";
     }
 

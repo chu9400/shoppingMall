@@ -33,7 +33,10 @@ public class MyUserDetailsService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority("일반유저"));
         }
+        CustomUser customUser = new CustomUser(findUser.getUsername(), findUser.getPassword(), authorities);
+        customUser.setId(findUser.getId());
+        customUser.setDisplayName(findUser.getDisplayName());
 
-        return new User(findUser.getUsername(), findUser.getPassword(), authorities);
+        return customUser;
     }
 }

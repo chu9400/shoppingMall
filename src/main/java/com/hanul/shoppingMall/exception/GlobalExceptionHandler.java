@@ -9,8 +9,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleGeneralException(Exception ex) {
-        ModelAndView mav = new ModelAndView("error/general_error");
+        ModelAndView mav = new ModelAndView("error");
         mav.addObject("message", ex.getMessage());
         return mav;
     }
+
+
 }
