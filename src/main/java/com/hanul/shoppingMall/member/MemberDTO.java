@@ -18,4 +18,10 @@ public class MemberDTO {
 
     @NotNull(message = "displayName을 입력해 주세요.")
     private String displayName;
+
+    public MemberDTO(String username, String password, String displayName) {
+        this.username = username;
+        this.password = password;
+        this.displayName = displayName;
+    }
 }

@@ -2,11 +2,13 @@ package com.hanul.shoppingMall.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -32,17 +34,18 @@ public class MemberController {
     }
 
 
-    @GetMapping("/my-page")
-    public String myPage(Authentication auth) {
-        // 임시 코드
-        System.out.println(auth.getName()); //아이디출력가능
-        System.out.println(auth.isAuthenticated()); //로그인여부 검사가능
+    @GetMapping("/my-page/{id}")
+    public String myPage(@PathVariable Long id, Model model) {
+        MemberMyPageDTO memberMyPageDTO = memberService.getMember(id);
+        model.addAttribute("member", memberMyPageDTO);
         return "member/mypage";
     }
 
     @PostMapping("/member")
-    public String registerMember (@Validated MemberDTO memberDTO) {
+    public String registerMember(@Validated MemberDTO memberDTO) {
         memberService.saveMember(memberDTO);
         return "redirect:/products";
     }
+
+
 }

@@ -12,7 +12,7 @@
         <div sec:authorize="isAuthenticated()">
             <span sec:authentication="principal.username"></span>
             <span>님 안녕하세요!</span>
-            <a href="/my-page" class="nav-link">myPage</a>
+            <a th:href="@{/my-page/{id}(id=${loggedInMemberId})}" class="nav-link">myPage</a>
             <a href="/products" class="nav-link">List</a>
             <a href="/products/new" class="nav-link">Write</a>
             <form id="logoutForm" class="nav-link" action="/logout" method="post">
