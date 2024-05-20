@@ -1,4 +1,4 @@
-package com.hanul.shoppingMall;
+package com.hanul.shoppingMall.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

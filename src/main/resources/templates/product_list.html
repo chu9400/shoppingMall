@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/main.css">
@@ -21,6 +21,34 @@
     <hr />
     <br />
 </div>
+
+
+<div class="pagination">
+    <p>글 목록</p>
+    <!-- 첫 페이지로 가는 링크 -->
+    <span><a th:href="@{/products/page/1}">처음</a></span>
+
+    <!-- 이전 페이지로 가는 링크 -->
+    <span th:if="${currentPage > 1}">
+        <a th:href="@{|/products/page/${currentPage - 1}|}">이전</a>
+    </span>
+
+    <!-- 페이지 번호들 -->
+    <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{|/products/page/${pageNum}|}"
+           th:text="${pageNum}"
+           th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
+    </span>
+
+    <!-- 다음 페이지로 가는 링크 -->
+    <span th:if="${currentPage < totalPages}">
+        <a th:href="@{|/products/page/${currentPage + 1}|}">다음</a>
+    </span>
+
+    <!-- 마지막 페이지로 가는 링크 -->
+    <span><a th:href="@{|/products/page/${totalPages}|}">마지막</a></span>
+</div>
+
 
 <script>
     // 자바스크립트 함수 정의

@@ -2,6 +2,8 @@ package com.hanul.shoppingMall.product;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,6 +49,18 @@ public class ProductController {
     public String showProductEditForm(@PathVariable Long productId, Model model) {
         return productService.renderProductForm(productId, model, "product_detail_edit");
     }
+
+    @GetMapping("/products/page/{pageNum}")
+    public String getListPage(@PathVariable Integer pageNum, Model model) {
+        Page<Product> productList = productRepository.findPageBy(PageRequest.of((pageNum - 1), 5));
+
+        model.addAttribute("productList", productList);
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", productList.getTotalPages());
+
+        return "product_list";
+    }
+
 
     // 상품 삭제
     @DeleteMapping("/products/delete/{productId}")
