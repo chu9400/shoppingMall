@@ -23,11 +23,16 @@ public class Product {
     private Integer price;
 
     @Column(nullable = false)
+    private String productImgUrl;
+
+    @Column(nullable = false)
     private String username;
 
-    public Product(String title, Integer price, String username) {
+
+    public Product(String title, Integer price, String productImgUrl, String username) {
         this.title = title;
         this.price = price;
+        this.productImgUrl = productImgUrl;
         this.username = username;
     }
 }

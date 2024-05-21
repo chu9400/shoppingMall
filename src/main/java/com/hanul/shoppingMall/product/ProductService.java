@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     public Product saveProduct(ProductDTO productDTO, Authentication auth) {
-        Product product = new Product(productDTO.getTitle(), productDTO.getPrice(), auth.getName());
+        Product product = new Product(productDTO.getTitle(), productDTO.getPrice(), productDTO.getProductImgUrl(), auth.getName());
         return productRepository.save(product);
     }
 

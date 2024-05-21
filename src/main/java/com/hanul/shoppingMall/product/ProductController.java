@@ -23,6 +23,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductRepository productRepository;
+    private final S3Service s3Service;
 
     @GetMapping("/")
     public String showlanding() {
@@ -53,12 +54,17 @@ public class ProductController {
     @GetMapping("/products/page/{pageNum}")
     public String getListPage(@PathVariable Integer pageNum, Model model) {
         Page<Product> productList = productRepository.findPageBy(PageRequest.of((pageNum - 1), 5));
-
         model.addAttribute("productList", productList);
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", productList.getTotalPages());
-
         return "product_list";
+    }
+
+    // 이미지 URL
+    @GetMapping("/presigned-url")
+    @ResponseBody
+    public String getPresignedURL(@RequestParam String filename) {
+        return s3Service.generatePresignedURL(filename);
     }
 
 
@@ -79,9 +85,8 @@ public class ProductController {
             log.info("productDTO Error = {}", result.getAllErrors());
             return "product_add";
         }
-        System.out.println("auth = " + auth.getName());
         productService.saveProduct(productDTO, auth);
-        return "redirect:/products";
+        return "redirect:/products/page/1";
     }
 
     // 상품 수정

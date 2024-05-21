@@ -18,4 +18,7 @@ public class ProductDTO {
     @Positive(message = "Price must be positive")
     private Integer price;
 
+    @NotNull(message = "이미지 URL이 있어야합니다.")
+    private String productImgUrl;
+
 }
