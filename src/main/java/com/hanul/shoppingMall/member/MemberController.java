@@ -20,7 +20,7 @@ public class MemberController {
     @GetMapping("/member/register")
     public String showRegisterForm(Authentication auth) {
         if (auth != null && auth.isAuthenticated()) {
-            return "redirect:/products";
+            return "redirect:/products/page/1";
         }
         return "member/register";
     }
@@ -28,7 +28,7 @@ public class MemberController {
     @GetMapping("/login")
     public String login(Authentication auth) {
         if (auth != null && auth.isAuthenticated()) {
-            return "redirect:/products";
+            return "redirect:/products/page/1";
         }
         return "login";
     }
@@ -44,7 +44,7 @@ public class MemberController {
     @PostMapping("/member")
     public String registerMember(@Validated MemberDTO memberDTO) {
         memberService.saveMember(memberDTO);
-        return "redirect:/products";
+        return "index";
     }
 
 

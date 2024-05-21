@@ -19,8 +19,11 @@
         <h4><a th:href="@{'/products/' + ${product.id}}" th:text="${product.title}">상품명</a></h4>
         <p th:text="${product.price} + '원'">가격</p>
         <p th:text="'작성자 : '+ ${product.username}">작성자</p>
-        <a th:href="@{'/products/edit/' + ${product.id}}">수정 페이지 이동</a> <br />
-        <a th:onclick="deleteBtn([[${product.id}]])">삭제 버튼</a> <br />
+        <div sec:authorize="hasAuthority('관리자')">
+            <a th:href="@{'/products/edit/' + ${product.id}}">수정 페이지 이동</a> <br />
+            <a th:onclick="deleteBtn([[${product.id}]])">삭제 버튼</a> <br />
+        </div>
+
     </div>
     <hr />
     <br />
