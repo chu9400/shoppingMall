@@ -29,25 +29,16 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product editProduct(Product product, ProductDTO productDTO) {
+    public Product updateProduct(Product product, ProductDTO productDTO) {
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
         product.setUsername(productDTO.getUsername());
+        product.setProductImgUrl(productDTO.getProductImgUrl());
         return productRepository.save(product);
     }
 
     public Optional<Product> findProduct(Long productId) {
         return productRepository.findById(productId);
-    }
-
-    public String renderProductForm(Long productId, Model model, String viewName) {
-        Optional<Product> productOptional = findProduct(productId);
-        if (productOptional.isPresent()) {
-            model.addAttribute("findProduct", productOptional.get());
-            return viewName;
-        } else {
-            return "redirect:/products";
-        }
     }
 
     public ResponseEntity<String> deleteProductStringResponse(Long productId) {

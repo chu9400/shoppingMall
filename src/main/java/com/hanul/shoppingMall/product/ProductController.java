@@ -1,19 +1,20 @@
 package com.hanul.shoppingMall.product;
 
+import com.hanul.shoppingMall.review.Review;
+import com.hanul.shoppingMall.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +25,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductRepository productRepository;
     private final S3Service s3Service;
+    private final ReviewRepository reviewRepository;
 
     @GetMapping("/")
     public String showlanding() {
@@ -36,13 +38,6 @@ public class ProductController {
         return "product_list";
     }
 
-/*
-    @GetMapping("/products/new")
-    public String showProductAddForm() {
-        return "product_add";
-    }
-*/
-
     @GetMapping("/products/new")
     public String showProductAddForm(Model model) {
         model.addAttribute("productDTO", new ProductDTO()); // 기존 코드에서 모델에 빈 ProductDTO 추가
@@ -51,12 +46,25 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public String showProductDetailForm(@PathVariable Long productId, Model model) {
-        return productService.renderProductForm(productId, model, "product_detail");
+        Optional<Product> productOptional = productService.findProduct(productId);
+        List<Review> reviewList = reviewRepository.findAll();
+
+        if (productOptional.isPresent()) {
+            model.addAttribute("findProduct", productOptional.get());
+            model.addAttribute("reviewList", reviewList);
+            return "product_detail";
+        }
+        return "error";
     }
 
     @GetMapping("/products/edit/{productId}")
     public String showProductEditForm(@PathVariable Long productId, Model model) {
-        return productService.renderProductForm(productId, model, "product_detail_edit");
+        Optional<Product> productOptional = productService.findProduct(productId);
+        if (productOptional.isPresent()) {
+            model.addAttribute("findProduct", productOptional.get());
+            return "product_detail_edit";
+        }
+        return "error";
     }
 
     @GetMapping("/products/page/{pageNum}")
@@ -68,7 +76,7 @@ public class ProductController {
         return "product_list";
     }
 
-    // 이미지 URL
+    // 이미지 presignedURL 생성
     @GetMapping("/presigned-url")
     @ResponseBody
     public String getPresignedURL(@RequestParam String filename) {
@@ -107,6 +115,7 @@ public class ProductController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
+            System.out.println("productDTO = " + productDTO);
             log.info("productDTO Error = {}", result.getAllErrors());
             return "redirect:/products/edit/" + productId + "?error=true";
         }
@@ -114,11 +123,12 @@ public class ProductController {
         Optional<Product> optionalProduct = productService.findProduct(productId);
         if (optionalProduct.isPresent()) {
             Product findProduct = optionalProduct.get();
-            productService.editProduct(findProduct, productDTO);
-            return "redirect:/products";
+            productService.updateProduct(findProduct, productDTO);
+            return "redirect:/products/page/1";
         } else {
             return "redirect:/products/edit/" + productId;
         }
     }
+
 
 }
