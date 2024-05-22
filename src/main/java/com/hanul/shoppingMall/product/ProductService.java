@@ -32,6 +32,7 @@ public class ProductService {
     public Product editProduct(Product product, ProductDTO productDTO) {
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
+        product.setUsername(productDTO.getUsername());
         return productRepository.save(product);
     }
 

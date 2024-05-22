@@ -36,8 +36,16 @@ public class ProductController {
         return "product_list";
     }
 
+/*
     @GetMapping("/products/new")
     public String showProductAddForm() {
+        return "product_add";
+    }
+*/
+
+    @GetMapping("/products/new")
+    public String showProductAddForm(Model model) {
+        model.addAttribute("productDTO", new ProductDTO()); // 기존 코드에서 모델에 빈 ProductDTO 추가
         return "product_add";
     }
 
@@ -86,6 +94,8 @@ public class ProductController {
             return "product_add";
         }
         productService.saveProduct(productDTO, auth);
+        System.out.println("auth = " + auth);
+        System.out.println("auth = " + auth.getName());
         return "redirect:/products/page/1";
     }
 

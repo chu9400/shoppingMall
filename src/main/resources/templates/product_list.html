@@ -2,6 +2,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" th:content="${_csrf.token}"/>
+    <meta name="csrf-header" th:content="${_csrf.headerName}"/>
+
     <link rel="stylesheet" href="/css/main.css">
     <title>상품 리스트 페이지</title>
 </head>
@@ -60,13 +63,23 @@
 <script>
     // 자바스크립트 함수 정의
     function deleteBtn(productId) {
+        // 메타 태그에서 CSRF 토큰과 헤더 이름 읽기
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="csrf-header"]').getAttribute('content');
+
         // fetch를 통해 DELETE 요청 전송
-        fetch('/products/delete/' + productId, { method : 'DELETE' } )
-            .then(r => r.text()) // 응답을 텍스트로 변환
-            .then((rep) => {
-                console.log(rep); // 응답 콘솔에 출력
-                location.reload(); // 페이지 리로드 되면 콘솔이 안보임
-            })
+        fetch('/products/delete/' + productId, {
+            method: 'DELETE',
+            headers: {
+                [csrfHeader]: csrfToken // CSRF 토큰을 요청 헤더에 추가
+            }
+        })
+        .then(response => response.text()) // 응답을 텍스트로 변환
+        .then((rep) => {
+            console.log(rep); // 응답 콘솔에 출력
+            location.reload(); // 페이지 리로드
+        })
+        .catch(error => console.error('Error:', error));
     }
 </script>
 
