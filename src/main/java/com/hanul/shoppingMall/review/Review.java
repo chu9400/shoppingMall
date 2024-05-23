@@ -9,6 +9,7 @@ import lombok.ToString;
 @Entity
 @Getter @Setter @ToString
 @NoArgsConstructor
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"username", "parentId"}) }) // 이 테이블에 username과 parentId라는 두 컬럼의 조합이 중복되지 않도록 하는 규칙이다.
 public class Review {
 
     @Id

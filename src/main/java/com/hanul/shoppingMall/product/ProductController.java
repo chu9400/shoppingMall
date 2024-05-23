@@ -1,6 +1,7 @@
 package com.hanul.shoppingMall.product;
 
 import com.hanul.shoppingMall.review.Review;
+import com.hanul.shoppingMall.review.ReviewDTO;
 import com.hanul.shoppingMall.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +61,6 @@ public class ProductController {
         }
         return "error";
     }
-
-
 
     @GetMapping("/products/page/{pageNum}")
     public String getListPage(@PathVariable Integer pageNum, Model model) {

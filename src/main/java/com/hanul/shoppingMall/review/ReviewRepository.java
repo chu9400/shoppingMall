@@ -10,4 +10,6 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 //    Page<Product> findPageBy(Pageable pageable);
     List<Review> findAllByParentId(Long parentId);
+    boolean existsByUsernameAndParentId(String username, Long parentId);
+
 }

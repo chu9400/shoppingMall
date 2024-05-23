@@ -113,3 +113,84 @@ public String addProduct(
 - 이 방법으로 csrf 보안 기능을 유지하며 AJAX에서 서버로 요청을 보낼 수 있다. 
 
 ---
+<br />
+
+## 테이블에 중복 방지 규칙 
+
+### 1. Entity 객체에 중복 방지 코드 추가
+   ```java
+@Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "parentId"})})
+public class Review {
+    
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private Long parentId;
+} 
+```
+- 이 테이블에 username과 parentId라는 두 컬럼의 조합이 중복되지 않도록 하는 코드
+
+<br />
+   
+### 2. 저장소 인터페이스에 코드 추가
+```java
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    boolean existsByUsernameAndParentId(String username, Long parentId);
+}
+```
+
+- 메서드 명명 규칙
+  - Prefix: 쿼리 메서드의 목적을 나타냅니다.
+      - findBy: 특정 조건을 만족하는 데이터를 찾습니다.
+      - existsBy: 특정 조건을 만족하는 데이터가 존재하는지 확인합니다.
+      - countBy: 특정 조건을 만족하는 데이터의 개수를 셉니다.
+      - deleteBy: 특정 조건을 만족하는 데이터를 삭제합니다.
+
+<br />
+<br />
+   
+### 3. 서비스와 컨트롤러 코드
+```java
+public void saveReview(ReviewDTO reviewDTO) {
+   if (reviewRepository.existsByUsernameAndParentId(reviewDTO.getUsername(), reviewDTO.getParentId())) {
+       throw new IllegalArgumentException("이미 리뷰를 작성하셨습니다.");
+   }
+       reviewRepository.save(new Review(reviewDTO.getUsername(), reviewDTO.getContent(), reviewDTO.getParentId()));
+   }
+```
+
+```java
+@PostMapping("/review")
+   public String addReview(@Validated ReviewDTO reviewDTO, BindingResult bindingResult) {
+   if (bindingResult.hasErrors()) {
+       return "redirect:/products/" + reviewDTO.getParentId();
+   }
+   
+   try {
+       reviewService.saveReview(reviewDTO);
+   } catch (IllegalArgumentException e) {
+       return "redirect:/products/" + reviewDTO.getParentId() + "?error=" + e.getMessage();
+   }
+   
+   return "redirect:/products/" + reviewDTO.getParentId();
+}
+```
+   
+### 4. 타임리프 코드
+   
+```html
+    <div th:if="${param.error}">
+        <p th:text="${param.error}">이미 리뷰를 작성하셨습니다.</p>
+    </div>
+```
+## 5. 정리
+- Entity 객체에 중복 방지 코드 추가: @UniqueConstraint 사용
+- 저장소 인터페이스에 메서드 추가: existsByUsernameAndParentId
+- 서비스와 컨트롤러에서 예외 처리
+- 타임리프에서 에러 메시지 출력
+
+<br />
+
+---
