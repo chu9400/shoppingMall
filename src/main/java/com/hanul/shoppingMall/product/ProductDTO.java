@@ -12,6 +12,7 @@ import lombok.ToString;
 @Getter @Setter @ToString
 @NoArgsConstructor
 public class ProductDTO {
+
     @NotNull(message = "Title cannot be null")
     @Size(max = 50, message = "Title must be less than or equal to 50 characters")
     private String title;
@@ -21,6 +22,7 @@ public class ProductDTO {
     private Integer price;
 
     @NotNull(message = "이미지 URL이 있어야합니다.")
+    @Size(min = 5, message = "이미지 URL은 최소 5자 이상이어야 합니다.")
     private String productImgUrl;
 
     @NotNull(message = "유저 이름이 있어야합니다.")

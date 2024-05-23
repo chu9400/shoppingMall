@@ -10,9 +10,14 @@
     <div th:replace="~{nav.html :: navbar}"></div>
 
     <h4>메인 페이지</h4>
-    <p><a href="/member/register">회원 가입 페이지</a></p><br />
-    <p><a href="/login">로그인 페이지</a></p><br />
+    <div sec:authorize="isAnonymous()">
+        <p><a href="/member/register">회원 가입 페이지</a></p><br />
+        <p><a href="/login">로그인 페이지</a></p><br />
+    </div>
+
     <p><a href="/products/page/1">상품 리스트 페이지</a></p><br />
+
+
 
 </body>
 </html>

@@ -29,16 +29,24 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product, ProductDTO productDTO) {
-        product.setTitle(productDTO.getTitle());
-        product.setPrice(productDTO.getPrice());
-        product.setUsername(productDTO.getUsername());
-        product.setProductImgUrl(productDTO.getProductImgUrl());
-        return productRepository.save(product);
-    }
-
     public Optional<Product> findProduct(Long productId) {
         return productRepository.findById(productId);
+    }
+
+    public void updateProduct(Product findProduct, ProductDTO productDTO) {
+        findProduct.setTitle(productDTO.getTitle());
+        findProduct.setPrice(productDTO.getPrice());
+        findProduct.setProductImgUrl(productDTO.getProductImgUrl());
+        productRepository.save(findProduct);
+    }
+
+    public ProductDTO convertToDto(Product product) {
+        return new ProductDTO(
+                product.getTitle(),
+                product.getPrice(),
+                product.getProductImgUrl(),
+                product.getUsername()
+        );
     }
 
     public ResponseEntity<String> deleteProductStringResponse(Long productId) {
@@ -46,14 +54,12 @@ public class ProductService {
         if (productOptional.isPresent()) {
             Product findProduct = productOptional.get();
             productRepository.deleteById(findProduct.getId());
-            log.info("삭제 완료");
-            log.info("삭제 상품 id : {}", findProduct.getId());
-            log.info("삭제 상품명 : {}", findProduct.getTitle());
-            return ResponseEntity.status(200).body("삭제완료!");
+            log.info("삭제 완료: 상품 ID = {}, 상품명 = {}", productId, productOptional.get().getTitle());
+            return ResponseEntity.ok("삭제 완료!");
+
         } else {
-            log.info("삭제 오류");
-            log.info("삭제 오류 상품 id : {}", productId);
-            return ResponseEntity.status(400).body("삭제오류!");
+            log.error("삭제 오류: 상품 ID = {}", productId);
+            return ResponseEntity.status(400).body("삭제 오류!");
         }
 
     }

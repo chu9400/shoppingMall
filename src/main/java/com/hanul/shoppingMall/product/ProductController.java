@@ -46,26 +46,22 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public String showProductDetailForm(@PathVariable Long productId, Model model) {
+
+        //상품 조회
         Optional<Product> productOptional = productService.findProduct(productId);
-        List<Review> reviewList = reviewRepository.findAll();
+
+        //리뷰 조회
+        List<Review> reviewListById = reviewRepository.findAllByParentId(productId);
 
         if (productOptional.isPresent()) {
             model.addAttribute("findProduct", productOptional.get());
-            model.addAttribute("reviewList", reviewList);
+            model.addAttribute("reviewList", reviewListById);
             return "product_detail";
         }
         return "error";
     }
 
-    @GetMapping("/products/edit/{productId}")
-    public String showProductEditForm(@PathVariable Long productId, Model model) {
-        Optional<Product> productOptional = productService.findProduct(productId);
-        if (productOptional.isPresent()) {
-            model.addAttribute("findProduct", productOptional.get());
-            return "product_detail_edit";
-        }
-        return "error";
-    }
+
 
     @GetMapping("/products/page/{pageNum}")
     public String getListPage(@PathVariable Integer pageNum, Model model) {
@@ -95,38 +91,57 @@ public class ProductController {
     public String addProduct(
             @Validated ProductDTO productDTO,
             BindingResult result,
-            Authentication auth
+            Authentication auth,
+            Model model
     ) {
         if (result.hasErrors()) {
             log.info("productDTO Error = {}", result.getAllErrors());
+            model.addAttribute("productDTO", productDTO); // 폼 재렌더링 시 입력값 유지
+            model.addAttribute("errorMessage", "상품과 가격을 다시 적어주세요."); // 에러 메시지 설정
             return "product_add";
         }
         productService.saveProduct(productDTO, auth);
-        System.out.println("auth = " + auth);
-        System.out.println("auth = " + auth.getName());
         return "redirect:/products/page/1";
     }
 
-    // 상품 수정
+    // 상품 수정 : GET
+    @GetMapping("/products/edit/{productId}")
+    public String showProductEditForm(@PathVariable Long productId, Model model) {
+        Optional<Product> productOptional = productService.findProduct(productId);
+        if (productOptional.isPresent()) {
+            ProductDTO productDTO = productService.convertToDto(productOptional.get());
+            model.addAttribute("productDTO", productDTO);
+            model.addAttribute("productId", productId);
+            return "product_detail_edit";
+        }
+        return "error";
+    }
+
+    // 상품 수정 : POST
     @PostMapping("/products/edit/{productId}")
     public String editProduct(
             @PathVariable Long productId,
             @Validated ProductDTO productDTO,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         if (result.hasErrors()) {
-            System.out.println("productDTO = " + productDTO);
             log.info("productDTO Error = {}", result.getAllErrors());
-            return "redirect:/products/edit/" + productId + "?error=true";
+            model.addAttribute("productDTO", productDTO); // 폼 재렌더링 시 입력값 유지
+            model.addAttribute("errorMessage", "상품과 가격을 다시 적어주세요."); // 에러 메시지 설정
+            model.addAttribute("productId", productId); //
+            return "product_detail_edit";
         }
 
         Optional<Product> optionalProduct = productService.findProduct(productId);
         if (optionalProduct.isPresent()) {
-            Product findProduct = optionalProduct.get();
-            productService.updateProduct(findProduct, productDTO);
+            productService.updateProduct(optionalProduct.get(), productDTO);
             return "redirect:/products/page/1";
         } else {
-            return "redirect:/products/edit/" + productId;
+            model.addAttribute("errorMessage", "해당 상품을 찾을 수 없습니다.");
+            model.addAttribute("productDTO", productDTO); // 폼 재렌더링 시 입력값 유지
+            model.addAttribute("productId", productId);
+            return "product_detail_edit";
         }
     }
 

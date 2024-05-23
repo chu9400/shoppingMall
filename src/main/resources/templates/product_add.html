@@ -11,27 +11,25 @@
     <div class="container">
         <h4>상품 추가 페이지</h4>
 
-        <form action="/products" method="POST">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <form action="/products" method="POST" onsubmit="return checkImage()">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="username" th:value="${#authentication.principal.username}" required>
 
-            <input type="text" name="title" placeholder="상품명" required>
-            <input type="text" name="price" placeholder="가격" required>
+            <input type="text" name="title" placeholder="상품명" th:value="${productDTO != null ? productDTO.title : ''}" required>
+            <input type="text" name="price" placeholder="가격" th:value="${productDTO != null ? productDTO.price : ''}" required>
 
-            <input type="file" onchange="getPresignedUrl(this)">
-            <input type="hidden" name="productImgUrl" class="presignedUrl" required>
+            <input type="file" id="fileInput" onchange="getPresignedUrl(this)">
+            <input type="hidden" id="productImgUrl" name="productImgUrl" class="presignedUrl" th:value="${productDTO != null ? productDTO.productImgUrl : ''}" required>
             <br /><br />
-            <img src="" />
+            <img th:src="${productDTO != null ? productDTO.productImgUrl : ''}" />
             <br /><br />
 
             <button type="submit">상품 추가</button>
         </form>
 
-
-
-
-        <div th:if="${param.error}">
-            <p>상품과 가격을 다시 적어주세요</p>
+        <!-- 에러 메시지 표시 -->
+        <div th:if="${errorMessage}">
+            <p th:text="${errorMessage}" style="color:red;"></p>
         </div>
     </div>
 
@@ -52,6 +50,15 @@
             document.querySelector('img').src = splitPresignedURL
             document.querySelector('.presignedUrl').value = splitPresignedURL
           }
+        }
+
+        function checkImage() {
+            let productImgUrl = document.getElementById('productImgUrl').value;
+            if (!productImgUrl) {
+                alert("이미지를 업로드해 주세요.");
+                return false;
+            }
+            return true;
         }
     </script>
 
