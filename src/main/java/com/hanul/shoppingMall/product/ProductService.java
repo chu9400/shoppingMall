@@ -2,6 +2,8 @@ package com.hanul.shoppingMall.product;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -61,8 +63,14 @@ public class ProductService {
             log.error("삭제 오류: 상품 ID = {}", productId);
             return ResponseEntity.status(400).body("삭제 오류!");
         }
-
     }
 
+    // FullTextIndex & Pagination
+    public Page<Product> getProductsAndPage(Integer pageNum, String searchText) {
+        int pageSize = 5; // 한 페이지에 보여줄 아이템 수
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize); // PageRequest 생성
+        Page<Product> productPage = productRepository.fullTextSearchProduct(searchText, pageRequest);
+        return productPage;
+    }
 
 }

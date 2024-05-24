@@ -33,18 +33,13 @@ public class ProductController {
         return "index";
     }
 
-    @GetMapping("/products")
-    public String showProductList(Model model) {
-        productService.findAllProduct(model);
-        return "product_list";
-    }
-
     @GetMapping("/products/new")
     public String showProductAddForm(Model model) {
         model.addAttribute("productDTO", new ProductDTO()); // 기존 코드에서 모델에 빈 ProductDTO 추가
         return "product_add";
     }
 
+    // 상품 상세 페이지
     @GetMapping("/products/{productId}")
     public String showProductDetailForm(@PathVariable Long productId, Model model) {
 
@@ -62,9 +57,11 @@ public class ProductController {
         return "error";
     }
 
+    // 상품 조회 페이지
     @GetMapping("/products/page/{pageNum}")
     public String getListPage(@PathVariable Integer pageNum, Model model) {
         Page<Product> productList = productRepository.findPageBy(PageRequest.of((pageNum - 1), 5));
+
         model.addAttribute("productList", productList);
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", productList.getTotalPages());
@@ -142,6 +139,35 @@ public class ProductController {
             model.addAttribute("productId", productId);
             return "product_detail_edit";
         }
+    }
+
+
+    // 상품 검색 페이지 이제 여기에 페이지네이션 기능 추가해야함 한 페이지에 몇 개 보이게 할까나
+    @GetMapping("/products/searchProduct/page/{pageNum}")
+    public String searchProduct(
+            @PathVariable Integer pageNum,
+            @RequestParam String searchText,
+            Model model
+        ) {
+        
+        // 검사 로직
+        if (searchText == null || searchText.trim().isEmpty()) {
+            return "redirect:/products/page/1?nullError";
+        }
+        if (searchText.length() < 2) {
+            return "redirect:/products/page/1?searchError";
+        }
+
+        // 정상 로직
+        // FullTextIndex & Pagination
+        Page<Product> productsAndPage = productService.getProductsAndPage(pageNum, searchText);
+
+        model.addAttribute("productList", productsAndPage.getContent());
+        model.addAttribute("searchText", searchText);
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", productsAndPage.getTotalPages());
+
+        return "product_list_search";
     }
 
 

@@ -12,9 +12,8 @@
 <div th:replace="~{nav.html :: navbar}"></div>
 
 <h4>상품 리스트 페이지</h4>
-
-<form th:action="@{'/products/searchProduct/page/1'}" method="GET" onsubmit="return validateForm()">
-    <input type="text" name="searchText" value="" style="inline" placeholder="상품 검색" required minlength="2">
+<form action="/products/searchProduct/page/1" method="GET" onsubmit="return validateForm()">
+    <input type="text" th:value="${searchText}" id="searchText" name="searchText" style="inline" placeholder="상품 검색(두 글자 이상 검색)" required minlength="2">
     <button>검색</button>
     <p th:if="${param.nullError}">상품을 입력해 주세요</p>
     <p th:if="${param.searchError}">두 글자 이상 입력해주세요</p>
@@ -23,13 +22,15 @@
 <br />
 <hr />
 
+<div th:if="${productList.size()} == 0">
+    <h4>검색 결과가 없습니다.</h4>
+</div>
 
-<div class="card" th:each="product : ${productList}">
 
+<div th:if="${productList}" class="card" th:each="product : ${productList}">
     <div>
         <img th:src="${product.productImgUrl != '' ? product.productImgUrl : 'https://placehold.co/300'}" />
     </div>
-
     <div>
         <h4><a th:href="@{'/products/' + ${product.id}}" th:text="${product.title}">상품명</a></h4>
         <p th:text="${product.price} + '원'">가격</p>
@@ -38,37 +39,36 @@
             <a th:href="@{'/products/edit/' + ${product.id}}">수정 페이지 이동</a> <br />
             <a th:onclick="deleteBtn([[${product.id}]])">삭제 버튼</a> <br />
         </div>
-
     </div>
     <hr />
     <br />
 </div>
 
-
+<!--검색 페이지 페이지네이션-->
 <div class="pagination">
     <p>글 목록</p>
     <!-- 첫 페이지로 가는 링크 -->
-    <span><a th:href="@{/products/page/1}">처음</a></span>
+    <span><a th:href="@{/products/searchProduct/page/1(searchText=${searchText})}">처음</a></span>
 
     <!-- 이전 페이지로 가는 링크 -->
     <span th:if="${currentPage > 1}">
-        <a th:href="@{|/products/page/${currentPage - 1}|}">이전</a>
+        <a th:href="@{|/products/searchProduct/page/${currentPage - 1}?searchText=${searchText}|}">이전</a>
     </span>
 
     <!-- 페이지 번호들 -->
     <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-        <a th:href="@{|/products/page/${pageNum}|}"
+        <a th:href="@{|/products/searchProduct/page/${pageNum}?searchText=${searchText}|}"
            th:text="${pageNum}"
            th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
     </span>
 
     <!-- 다음 페이지로 가는 링크 -->
     <span th:if="${currentPage < totalPages}">
-        <a th:href="@{|/products/page/${currentPage + 1}|}">다음</a>
+        <a th:href="@{|/products/searchProduct/page/${currentPage + 1}?searchText=${searchText}|}">다음</a>
     </span>
 
     <!-- 마지막 페이지로 가는 링크 -->
-    <span><a th:href="@{|/products/page/${totalPages}|}">마지막</a></span>
+    <span><a th:href="@{|/products/searchProduct/page/${totalPages}?searchText=${searchText}|}">마지막</a></span>
 </div>
 
 
@@ -94,16 +94,15 @@
         .catch(error => console.error('Error:', error));
     }
 
-
     // 입력 값 유효성 검사 함수
-    function validateForm() {
-        const searchText = document.getElementById("searchText").value;
-        if (searchText.length < 2) {
-            alert("검색어는 두 글자 이상 입력해야 합니다.");
-            return false;
-        }
-        return true;
-    }
+<!--    function validateForm() {-->
+<!--        const searchText = document.getElementById("searchText").value;-->
+<!--        if (searchText.length < 2) {-->
+<!--            alert("검색어는 두 글자 이상 입력해야 합니다.");-->
+<!--            return false;-->
+<!--        }-->
+<!--        return true;-->
+<!--    }-->
 </script>
 
 </body>

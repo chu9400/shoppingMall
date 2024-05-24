@@ -194,3 +194,88 @@ public void saveReview(ReviewDTO reviewDTO) {
 <br />
 
 ---
+<br />
+
+## index 만들기
+```java
+@Entity
+@Table(indexes = {
+  @Index(name = "인덱스이름작명", columnList = "인덱스만들컬럼명1"),
+  @Index(name = "인덱스이름작명", columnList = "인덱스만들컬럼명2")
+})
+public class Product {
+
+} 
+```
+- 검색 성능 향상을 위해 full text index를 만들자.
+
+<br />
+
+---
+
+## full text index 만들기
+- DB에 mysql 쿼리문 직접 작성
+  ```sql
+    - CREATE FULLTEXT INDEX 인덱스이름작명 ON 테이블명(컬럼명) WITH PARSER ngram;
+    
+    - create fulltext index fulltext_index on shoppingmall.product(title) with parser ngram;
+  ```
+  
+---
+
+## FullTextIndex & Pagination 동시 사용
+### 1. 저장소 코드
+  ```java
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    Page<Product> findPageBy(Pageable pageable);
+
+    @Query(value = "SELECT * FROM product WHERE MATCH(title) AGAINST(?1)", nativeQuery = true)
+    Page<Product> fullTextSearchProduct(String text, Pageable pageable);
+}
+```
+
+<br />
+
+### 2. 서비스 코드
+```java
+// FullTextIndex & Pagination
+public Page<Product> getProductsAndPage(Integer pageNum, String searchText) {
+    int pageSize = 5; // 한 페이지에 보여줄 아이템 수
+    PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize); // PageRequest 생성
+    Page<Product> productPage = productRepository.fullTextSearchProduct(searchText, pageRequest);
+    return productPage;
+}
+```
+
+### 3. 컨트롤러 코드
+```java
+ @GetMapping("/products/searchProduct/page/{pageNum}")
+public String searchProduct(
+        @PathVariable Integer pageNum,
+        @RequestParam String searchText,
+        Model model
+) {
+
+  Page<Product> productsAndPage = productService.getProductsAndPage(pageNum, searchText);
+  model.addAttribute("productList", productsAndPage.getContent());
+  model.addAttribute("searchText", searchText);
+  model.addAttribute("currentPage", pageNum);
+  model.addAttribute("totalPages", productsAndPage.getTotalPages());
+
+  return "product_list_search";
+}
+```
+
+### 4. 타임리프 코드
+```html
+<span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+    <a th:href="@{|/products/searchProduct/page/${pageNum}?searchText=${searchText}|}"
+       th:text="${pageNum}"
+       th:classappend="${pageNum == currentPage} ? 'active' : ''"></a>
+</span>
+```
+- th:href 부분의 문법 중요.
+- 프로젝트내 product_list_search.html 파일 참고
+
+
+---
