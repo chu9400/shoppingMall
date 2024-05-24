@@ -142,7 +142,7 @@ public class ProductController {
     }
 
 
-    // 상품 검색 페이지 이제 여기에 페이지네이션 기능 추가해야함 한 페이지에 몇 개 보이게 할까나
+    // 상품 검색 페이지
     @GetMapping("/products/searchProduct/page/{pageNum}")
     public String searchProduct(
             @PathVariable Integer pageNum,
