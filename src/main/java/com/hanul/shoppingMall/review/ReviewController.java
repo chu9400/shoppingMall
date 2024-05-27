@@ -24,13 +24,13 @@ public class ReviewController {
             return "redirect:/products/" + reviewDTO.getParentId(); // 리뷰 작성에 실패하면 해당 상품 페이지로 리다이렉트
         }
 
-        try {
-            reviewService.saveReview(reviewDTO);
-        } catch (IllegalArgumentException e) {
-            log.info("리뷰 작성 실패 : {}", e.getMessage());
-            return "redirect:/products/" + reviewDTO.getParentId() + "?error=" + e.getMessage(); // 에러 메시지와 함께 리다이렉트
+        // 리뷰 중복 검사
+        boolean exists = reviewService.checkReviewExists(reviewDTO);
+        if (exists) {
+            return "redirect:/products/" + reviewDTO.getParentId() + "?error";
         }
 
+        reviewService.saveReview(reviewDTO);
         return "redirect:/products/" + reviewDTO.getParentId(); // 성공 시 해당 상품 페이지로 리다이렉트
 
     }
