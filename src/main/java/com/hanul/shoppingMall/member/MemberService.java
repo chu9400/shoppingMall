@@ -22,17 +22,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public MemberMyPageDTO getMember(Long id) {
-        Optional<Member> findMember = memberRepository.findById(id);
-        if (findMember.isPresent()) {
-            Member member = findMember.get();
-            return new MemberMyPageDTO(member.getUsername(), member.getDisplayName());
-        } else {
-            throw new MemberNotFoundException("요청한 Member id : " + id + " - 찾을 수 없음!");
-        }
-    }
-
-    public Member findMemberForId(Long id) {
+    public Member getMember(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException("요청한 Member id : " + id + " - 찾을 수 없음!");

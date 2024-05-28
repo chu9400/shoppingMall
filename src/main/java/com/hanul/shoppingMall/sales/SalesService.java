@@ -24,7 +24,7 @@ public class SalesService {
         CustomUser user = (CustomUser) auth.getPrincipal();
         Long userId = user.getId();
 
-        Member findMember = memberService.findMemberForId(userId);
+        Member findMember = memberService.getMember(userId);
         Integer totalPrice = calculateTotalPrice(salesDTO.getPrice(), salesDTO.getCount());
 
         Sales sales = new Sales(salesDTO.getTitle(), salesDTO.getPrice(), salesDTO.getCount(), findMember, totalPrice);

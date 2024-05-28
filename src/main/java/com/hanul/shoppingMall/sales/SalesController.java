@@ -38,7 +38,6 @@ public class SalesController {
             return "redirect:/products/" + productId + "?usernameError=true";
         }
 
-
         if (bindingResult.hasErrors()) {
             log.info("====== SalesDTO 에러 발생 = {} ======", bindingResult.getAllErrors());
             return "error";

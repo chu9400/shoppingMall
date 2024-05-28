@@ -25,19 +25,6 @@
             <span sec:authorize="hasAuthority('관리자')">관리자</span>
         </div>
 
-        <hr />
-
-        <div>내가 뽑은 ResponseBody 데이터 </div>
-        <div th:if="${loggedInUsername eq member.username}">
-            <p>Username: <span th:text="${member.username}"></span></p>
-            <p>DisplayName: <span th:text="${member.displayName}"></span></p>
-        </div>
-        <div th:unless="${loggedInUsername eq member.username}">
-            <p>아이디를 찾을 수 없습니다.</p>
-        </div>
-
-
-
     </div>
 </body>
 </html>
