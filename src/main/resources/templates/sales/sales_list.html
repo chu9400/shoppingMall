@@ -8,18 +8,13 @@
 <body>
 <div th:replace="~{nav.html :: navbar}"></div>
 
-<div class="confirmation-container">
-    <h1>주문 내역 페이지</h1>
-    <a href="/products/page/1">상품 리스트 페이지로 돌아가기</a>
-</div>
-
 <div class="card" th:each="product : ${productList}">
 
-    <p><span>주문 번호 : </span>  <span th:text="${product.id}"></span></p>
+    <p><span>주문 번호 : </span> <span th:text="${product.id}"></span></p>
     <p><span>상품명 : </span>  <span th:text="${product.title}"></span></p>
     <p><span>상품 개당 가격 : </span>  <span th:text="${product.price}"></span></p>
     <p><span>상품 수량 : </span>  <span th:text="${product.count}"></span></p>
-    <p><span>주문자 아이디 : </span>  <span th:text="${product.member.username}"></span></p>
+    <p><span>주문자 아이디 : </span>  <span th:text="${product.username}"></span></p>
     <p><span>상품 총 가격 : </span>  <span th:text="${product.totalPrice}"></span></p>
     <p><span>주문 날짜 : </span>  <span th:text="${product.created}"></span></p>
 

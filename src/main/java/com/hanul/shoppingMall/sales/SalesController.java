@@ -58,13 +58,15 @@ public class SalesController {
 
         CustomUser user = (CustomUser) auth.getPrincipal();
         String username = user.getUsername();
-        if (!username.equals("kim")) {
+        boolean isAdmin = username.equals("kim") || username.equals("admin");
+
+        if (!isAdmin) {
             log.info("====== 주문 내역 페이지 접근 권한 에러 발생! auth = {} ======", auth);
             return "redirect:/";
         }
 
-        List<Sales> saleList = salesRepository.findAll();
-        model.addAttribute("productList", saleList);
+        SalesListDTO salesList = salesService.getSalesList();
+        model.addAttribute("productList", salesList.getSalesDTOList());
         return "sales/sales_list";
     }
 
