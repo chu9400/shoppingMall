@@ -31,4 +31,12 @@ public class MemberService {
             throw new MemberNotFoundException("요청한 Member id : " + id + " - 찾을 수 없음!");
         }
     }
+
+    public Member findMemberForId(Long id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        if (optionalMember.isEmpty()) {
+            throw new MemberNotFoundException("요청한 Member id : " + id + " - 찾을 수 없음!");
+        }
+        return optionalMember.get();
+    }
 }

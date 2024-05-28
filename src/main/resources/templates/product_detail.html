@@ -25,8 +25,7 @@
             <input type="hidden" name="productId" th:value="${findProduct.id}">
             <input type="hidden" name="title" th:value="${findProduct.title}">
             <input type="hidden" name="price" th:value="${findProduct.price}">
-            <input type="hidden" name="username" th:value="${#authentication.name}">
-            <input type="number" name="count" value="1">
+            <input type="text" name="count" value="1">
             <button type="submit">주문하기</button>
 
             <p th:if="${param.usernameError}">

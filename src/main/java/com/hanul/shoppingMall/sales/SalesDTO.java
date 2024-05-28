@@ -1,5 +1,6 @@
 package com.hanul.shoppingMall.sales;
 
+import com.hanul.shoppingMall.member.Member;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +20,10 @@ public class SalesDTO {
     @NotNull(message = "count 는 공백일 수 없습니다.")
     private Integer count;
 
-    @NotNull(message = "username 는 공백일 수 없습니다.")
-    private String username;
 
-    public SalesDTO(String title, Integer price, Integer count, String username) {
+    public SalesDTO(String title, Integer price, Integer count) {
         this.title = title;
         this.price = price;
         this.count = count;
-        this.username = username;
     }
 }

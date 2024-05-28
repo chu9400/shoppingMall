@@ -1,8 +1,8 @@
 package com.hanul.shoppingMall.sales;
 
-import com.hanul.shoppingMall.member.Member;
-import com.hanul.shoppingMall.member.MemberRepository;
+import com.hanul.shoppingMall.member.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,17 +12,24 @@ import java.util.Optional;
 public class SalesService {
 
     private final SalesRepository salesRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    public void saveSales(SalesDTO salesDTO) {
+    public void saveSales(SalesDTO salesDTO, Authentication auth) {
 
-        Optional<Member> optionalMember = memberRepository.findByUsername(salesDTO.getUsername());
+        CustomUser user = (CustomUser) auth.getPrincipal();
+        Long userId = user.getId();
 
-        if (optionalMember.isPresent()) {
-            Long findMemberId = optionalMember.get().getId();
-            Sales sales = new Sales(salesDTO.getTitle(), salesDTO.getPrice(), salesDTO.getPrice(), findMemberId );
-            salesRepository.save(sales);
-        }
+        Member findMember = memberService.findMemberForId(userId);
+        Integer totalPrice = calculateTotalPrice(salesDTO.getPrice(), salesDTO.getCount());
+
+        Sales sales = new Sales(salesDTO.getTitle(), salesDTO.getPrice(), salesDTO.getCount(), findMember, totalPrice);
+        salesRepository.save(sales);
 
     }
+
+
+    private Integer calculateTotalPrice(Integer price, Integer count) {
+        return price * count;
+    }
+
 }
