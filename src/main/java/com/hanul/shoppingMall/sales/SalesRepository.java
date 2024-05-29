@@ -8,4 +8,5 @@ import java.util.List;
 public interface SalesRepository extends JpaRepository<Sales, Long> {
     @Query(value = "SELECT s FROM Sales s JOIN FETCH s.member")
     List<Sales> salesFindAll();
+
 }

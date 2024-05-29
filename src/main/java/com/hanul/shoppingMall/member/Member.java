@@ -1,10 +1,14 @@
 package com.hanul.shoppingMall.member;
 
+import com.hanul.shoppingMall.sales.Sales;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter @ToString
@@ -28,4 +32,8 @@ public class Member {
         this.password = password;
         this.displayName = displayName;
     }
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "member")
+    private List<Sales> sales = new ArrayList<>();
 }

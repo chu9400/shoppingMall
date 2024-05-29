@@ -279,3 +279,8 @@ public String searchProduct(
 
 
 ---
+
+## 주문 기능 개발하면서 배운 점
+- @ManyToOne 쓰면 그 컬럼이 가리키는 테이블도 출력가능 (SQL JOIN)
+- @ManyToOne 성능 문제는 "JOIN FETCH" 사용([SalesRepository.java](..%2Fsales%2FSalesRepository.java) 참고) 
+- 반대로 @OneToMany 도 가능

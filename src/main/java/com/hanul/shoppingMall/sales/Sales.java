@@ -19,32 +19,35 @@ public class Sales {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
-    private String title;
-    @Column(nullable = false)
-    private Integer price;
+
     @Column(nullable = false)
     private Integer count;
 
-    @ManyToOne
+    @Column(nullable = false)
+    private Integer totalPrice;
+
+    @Column(nullable = false)
+    @CreationTimestamp
+    LocalDateTime created; // 자동 생성
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "product_id",
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
+    )
+    private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "member_id",
         foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private Member member;
 
-    @Column(nullable = false)
-    @CreationTimestamp
-    LocalDateTime created; // 자동 생성
-
-    @Column(nullable = false)
-    private Integer totalPrice;
-
-    public Sales(String title, Integer price, Integer count, Member member, Integer totalPrice) {
-        this.title = title;
-        this.price = price;
+    public Sales(Integer count, Integer totalPrice, Product product, Member member) {
         this.count = count;
-        this.member = member;
         this.totalPrice = totalPrice;
+        this.product = product;
+        this.member = member;
     }
 }

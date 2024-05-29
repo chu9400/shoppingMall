@@ -1,6 +1,8 @@
 package com.hanul.shoppingMall.sales;
 
 import com.hanul.shoppingMall.member.CustomUser;
+import com.hanul.shoppingMall.member.Member;
+import com.hanul.shoppingMall.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,20 +14,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
 public class SalesController {
     private final SalesService salesService;
-    private final SalesRepository salesRepository;
-
+    private final MemberRepository memberRepository;
 
     @GetMapping("/sales")
     public String showSale() {
         return "sales/sales-confirmation";
     }
 
+    // 주문 요청
     @PostMapping("/sales")
     public String addSales(
         @Validated SalesDTO salesDTO,
@@ -43,10 +46,11 @@ public class SalesController {
             return "error";
         }
 
-        salesService.saveSales(salesDTO, auth);
+        salesService.saveSales(productId, salesDTO, auth);
         return "redirect:/sales";
     }
 
+    // 주문 목록 페이지
     @GetMapping("/sales/all")
     public String getSaleAll(Authentication auth, Model model) {
         // 관리자만 보이게
@@ -63,10 +67,16 @@ public class SalesController {
             log.info("====== 주문 내역 페이지 접근 권한 에러 발생! auth = {} ======", auth);
             return "redirect:/";
         }
+/*
 
         SalesListDTO salesList = salesService.getSalesList();
         model.addAttribute("productList", salesList.getSalesDTOList());
         return "sales/sales_list";
+*/
+        var result = memberRepository.findById(1L);
+        System.out.println("result = " + result.get().getSales());
+        return "redirect:/";
+
     }
 
 }
