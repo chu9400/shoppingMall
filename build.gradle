@@ -28,7 +28,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	runtimeOnly 'com.mysql:mysql-connector-j' // java에서 mysql접속 서포트
+	//runtimeOnly 'com.mysql:mysql-connector-j' // java에서 mysql접속 서포트
+	implementation 'mysql:mysql-connector-java:8.0.28' // mysql 드라이버 의존성 추가
+
 
 	// JPA : java의 ORM 표준문법 // Hibernate : JPA 쓰기좋게 구현한거
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // jpa사용, 데이터를 java로 관리
@@ -37,6 +39,7 @@ dependencies {
 
 	// spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	// 타임리프에서 spring security 사용할 수 있게 도와줌
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
@@ -46,6 +49,10 @@ dependencies {
 	// aws s3 라이브러리 설치
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
 
+	// Jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-gson:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
 
 }
 

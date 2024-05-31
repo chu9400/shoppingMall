@@ -8,15 +8,17 @@
 </head>
 <body>
     <div th:replace="~{nav.html :: navbar}"></div>
+
     <div class="container">
         <h4>로그인 페이지</h4>
 
         <form action="/login" method="POST">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+<!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
             <input type="text" name="username" placeholder="아이디" required>
             <input type="password" name="password" placeholder="비밀번호" required>
             <button type="submit">로그인</button>
         </form>
+
 
         <a href="/member/register">회원가입</a>
 
@@ -25,5 +27,34 @@
         </div>
 
     </div>
+
+
+    <script>
+        function loginJWT(){
+          fetch('/login/jwt', {
+            method : 'POST',
+            headers : {'Content-Type': 'application/json'},
+            body : JSON.stringify({
+              username : document.querySelector('#username').value,
+              password : document.querySelector('#password').value
+            })
+          }).then(r => r.text()).then((r)=>{ console.log(r) })
+        }
+    </script>
+
+    <form>
+        <input type="text" name="username" id="username" placeholder="아이디" required>
+        <input type="password" name="password" id="password" placeholder="비밀번호" required>
+    </form>
+    <button onclick="loginJWT()">JWT방식로그인</button>
+
+    <script>
+        function getMyPage() {
+            fetch('/my-page/jwt')
+            .then((r) => r.text())
+            .then((r) => {console.log(r)})
+        }
+    </script>
+    <button onclick="getMyPage()">JWT 마이페이지 주세요</button>
 </body>
 </html>
