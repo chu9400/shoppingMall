@@ -3,13 +3,13 @@ package com.hanul.shoppingMall.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,17 +25,18 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("로그인 아이디를 찾을 수 없습니다.");
         }
 
-        Member findUser = memberOptional.get();
+        Member member = memberOptional.get();
+        List<GrantedAuthority> authorities = new ArrayList<>();
 
-        ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-        if (findUser.getUsername().equals("admin") || findUser.getUsername().equals("kim")) {
-            authorities.add(new SimpleGrantedAuthority("관리자"));
+        if ("admin".equals(member.getUsername()) || "kim".equals(member.getUsername())) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         } else {
-            authorities.add(new SimpleGrantedAuthority("일반유저"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
-        CustomUser customUser = new CustomUser(findUser.getUsername(), findUser.getPassword(), authorities);
-        customUser.setId(findUser.getId());
-        customUser.setDisplayName(findUser.getDisplayName());
+
+        CustomUser customUser = new CustomUser(member.getUsername(), member.getPassword(), authorities);
+        customUser.setId(member.getId());
+        customUser.setDisplayName(member.getDisplayName());
 
         return customUser;
     }

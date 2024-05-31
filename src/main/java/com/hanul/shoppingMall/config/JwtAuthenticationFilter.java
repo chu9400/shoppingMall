@@ -36,8 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter implements Han
             if (claims != null) {
                 String username = claims.get("username", String.class);
                 String displayName = claims.get("displayName", String.class);
-                Double memberIdDouble = claims.get("memberId", Double.class); // jwt는 Double만 된다.
-                Long memberId = memberIdDouble != null ? memberIdDouble.longValue() : null;
+                Long memberId = claims.get("memberId", Double.class).longValue();
 
                 List<SimpleGrantedAuthority> authorities = ((List<String>) claims.get("authorities"))
                         .stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
