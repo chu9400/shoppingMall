@@ -284,3 +284,95 @@ public String searchProduct(
 - @ManyToOne 쓰면 그 컬럼이 가리키는 테이블도 출력가능 (SQL JOIN)
 - @ManyToOne 성능 문제는 "JOIN FETCH" 사용([SalesRepository.java](..%2Fsales%2FSalesRepository.java) 참고) 
 - 반대로 @OneToMany 도 가능
+
+---
+
+## JWT 로그인 구현
+위의 문제를 해결하기 위해 JWT 기반 로그인을 구현했습니다. JWT 로그인을 구현하려면 다음의 파일을 생성 및 수정해야 합니다:
+
+- [CookieUtil.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fconfig%2FCookieUtil.java)
+- [JwtAuthenticationFilter.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fconfig%2FJwtAuthenticationFilter.java)
+- [JwtUtil.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fconfig%2FJwtUtil.java)
+- [SecurityConfig.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fconfig%2FSecurityConfig.java)
+- [MyUserDetailsService.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fmember%2FMyUserDetailsService.java)
+- [CustomUser.java](src%2Fmain%2Fjava%2Fcom%2Fhanul%2FshoppingMall%2Fmember%2FCustomUser.java)
+
+
+<br />
+
+
+## JWT 로그인 기능 전체 흐름
+
+#### CookieUtil
+- 쿠키를 쉽게 가져오거나 설정할 수 있는 유틸리티 클래스를 만듭니다.
+- CookieUtil.java 파일 생성.
+
+
+<br />
+
+
+#### JwtAuthenticationFilter
+- 요청을 가로채 JWT를 검증하고 인증 정보를 설정하는 필터를 만듭니다.
+- JwtAuthenticationFilter.java 파일 생성.
+- 이 필터는 모든 요청에 대해 JWT를 검증합니다.
+
+
+<br />
+
+#### JwtUtil
+- JWT 토큰의 생성, 파싱 및 검증을 담당하는 유틸리티 클래스를 만듭니다.
+- JwtUtil.java 파일 생성.
+
+
+<br />
+
+#### SecurityConfig
+- Spring Security 설정 파일에서 JWT 필터를 등록하고, 필요한 보안 설정을 적용합니다.
+- SecurityConfig.java 파일 수정.
+- 이 설정 파일에서 JWT 필터를 등록하고, 세션 관리 정책을 무상태(stateless)로 설정합니다.
+
+<br />
+
+#### MyUserDetailsService
+- 사용자 정보를 로드하는 서비스 클래스를 만듭니다.
+- MyUserDetailsService.java 파일 생성.
+- 사용자 정보를 데이터베이스에서 로드하고, 사용자 인증 정보를 반환합니다.
+
+<br />
+
+#### CustomUser 생성:
+- 사용자 정보를 담는 커스텀 유저 클래스를 만듭니다.
+- CustomUser.java 파일 생성.
+- 사용자 ID와 표시 이름을 추가로 담는 유저 클래스를 정의합니다.
+
+### 정리
+- 스프링 시큐리티의 로그인 정보를 그대로 사용하되, 스프링 시큐리티의 로그인 정보에 값을 넣는 것은 jwt 방식으로 삽입.
+
+
+- 순서
+  - 스프링 시큐리티 기능을 사용하기 위해 SecurityConfig 생성.
+  - CustomUser를 만들어서 시큐리티 로그인 정보에 추가할 것들 설정.
+  - MyUserDetailsService를 생성하여 CustomUser에서 추가한 정보를 포함한 "로그인 정보" 생성.
+  - 전역으로 JWT 인증을 위해 JwtAuthenticationFilter 생성.
+  - JWT 생성 및 파싱을 위해 JwtUtil 생성.
+  - 브라우저의 쿠키에 접근하기 위해 CookieUtil 생성.
+
+
+- 자세히
+  - SecurityConfig.java: Spring Security 설정 파일, JWT 필터를 등록하고 보안 설정을 적용.
+  - CustomUser.java: 사용자 정보를 담는 커스텀 유저 클래스.
+  - MyUserDetailsService.java: 사용자 정보를 로드하는 서비스 클래스.
+  - JwtAuthenticationFilter.java: 요청을 가로채 JWT를 검증하고 인증 정보를 설정하는 필터.
+  - JwtUtil.java: JWT 토큰의 생성, 파싱 및 검증을 담당하는 유틸리티 클래스.
+  - CookieUtil.java: 쿠키를 쉽게 가져오거나 설정할 수 있는 유틸리티 클래스.
+  
+  
+  
+  
+
+
+<br />
+
+---
+
+<br />
