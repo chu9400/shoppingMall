@@ -50,7 +50,7 @@ public class SalesController {
         return "redirect:/sales";
     }
 
-    // 주문 목록 페이지
+    // 주문 목록 조회 페이지
     @GetMapping("/sales/all")
     public String getSaleAll(Authentication auth, Model model) {
         // 관리자만 보이게
@@ -67,15 +67,13 @@ public class SalesController {
             log.info("====== 주문 내역 페이지 접근 권한 에러 발생! auth = {} ======", auth);
             return "redirect:/";
         }
-/*
 
         SalesListDTO salesList = salesService.getSalesList();
         model.addAttribute("productList", salesList.getSalesDTOList());
+        
+        // <p><span>주문 날짜 : </span>  <span th:text="${product.created}"></span></p> 
+        // 이거 가져오기 확인
         return "sales/sales_list";
-*/
-        var result = memberRepository.findById(1L);
-        System.out.println("result = " + result.get().getSales());
-        return "redirect:/";
 
     }
 

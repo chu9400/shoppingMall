@@ -39,8 +39,10 @@ public class SalesService {
         salesRepository.save(sales);
     }
 
+
     public SalesListDTO getSalesList() {
         List<Sales> salesList = salesRepository.salesFindAll();
+        // 상품 정보도 같이 가져와야하는 코드 짜기.
 
         List<SalesDTO> salesListDTOList = salesList.stream()
                 .map(sales -> new SalesDTO(

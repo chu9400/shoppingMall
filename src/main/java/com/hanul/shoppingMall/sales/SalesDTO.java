@@ -28,12 +28,6 @@ public class SalesDTO {
 
     private Integer totalPrice;
 
-    public SalesDTO(String productTitle, Integer productPrice, Integer count) {
-        this.productTitle = productTitle;
-        this.productPrice = productPrice;
-        this.count = count;
-    }
-
     public SalesDTO(Long id, String productTitle, Integer productPrice, Integer count, String username, Integer totalPrice) {
         this.id = id;
         this.productTitle = productTitle;
